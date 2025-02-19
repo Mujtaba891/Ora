@@ -1,0 +1,23 @@
+{
+    "name": "Ora File App",
+    "short_name": "Ora",
+    "description": "Open and edit .ora files",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "icons": [
+      {
+        "src": "WhatsApp Image 2025-02-17 at 18.49.38_59237ca1.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "file_handlers": [
+      {
+        "action": "/viewer.html",
+        "accept": {
+          "application/ora": [".ora"]
+        }
+      }
+    ]
+  }
+  

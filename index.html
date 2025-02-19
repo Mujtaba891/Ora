@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ora</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="/WhatsApp Image 2025-02-17 at 18.49.38_59237ca1.png">
+</head>
+<body>
+
+    <div class="home-container">
+        <h1>Welcome to Ora File App</h1>
+        <p>Create, edit, and share your custom .Ora files.</p>
+        <button onclick="createNewFile()">Create New Ora File</button>
+        <button onclick="createNewFile()">
+            <img src="/icons/create.png" alt="Create" width="20"> Create New Ora File
+        </button>
+        
+        <div class="recents-container">
+            <h2>Recents</h2>
+            <ul id="recentsList" class="recents-list"></ul>
+        </div>
+
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.log("Service Worker Registered"));
+        }
+    </script>
+    <script>
+       function loadRecents() {
+    const recents = JSON.parse(localStorage.getItem("recents")) || [];
+    const recentsList = document.getElementById("recentsList");
+    recentsList.innerHTML = ""; 
+
+    if (recents.length === 0) {
+        recentsList.innerHTML = "<li>No recent files.</li>";
+        return;
+    }
+
+    recents.forEach(fileName => {
+        const li = document.createElement("li");
+        li.textContent = fileName;
+
+        const iconsDiv = document.createElement("div");
+iconsDiv.classList.add("icons");
+
+// ✅ Edit Button
+const editButton = document.createElement("button");
+editButton.innerHTML = '<img src="icons/edit.png" alt="Edit" width="20"> Edit';
+editButton.onclick = function () {
+    editFile(fileName);
+};
+iconsDiv.appendChild(editButton);
+
+// ✅ Rename Button
+const renameButton = document.createElement("button");
+renameButton.innerHTML = '<img src="icons/rename.png" alt="Rename" width="20"> Rename';
+renameButton.onclick = function () {
+    renameFile(fileName);
+};
+iconsDiv.appendChild(renameButton);
+
+// ✅ Share Button
+const shareButton = document.createElement("button");
+shareButton.innerHTML = '<img src="icons/share.png" alt="Share" width="20"> Share';
+shareButton.onclick = function () {
+    shareFile(fileName);
+};
+iconsDiv.appendChild(shareButton);
+
+// ✅ Delete Button
+const deleteButton = document.createElement("button");
+deleteButton.innerHTML = '<img src="icons/delete.png" alt="Delete" width="20"> Delete';
+deleteButton.onclick = function () {
+    removeFile(fileName);
+};
+iconsDiv.appendChild(deleteButton);
+
+li.appendChild(iconsDiv);
+recentsList.appendChild(li);
+
+
+
+
+    });
+}
+
+// Fetch the file content from localStorage when Edit button is clicked
+function openFileInEditor(fileName) {
+    const savedFiles = JSON.parse(localStorage.getItem("savedFiles")) || {};
+    const fileContent = savedFiles[fileName];
+
+    if (fileContent) {
+        sessionStorage.setItem("currentFileName", fileName); // Store file name
+        sessionStorage.setItem("currentFileContent", fileContent); // Store file content
+        window.location.href = `editor.html?file=${encodeURIComponent(fileName)}`;
+ // Redirect to editor page
+    } else {
+        alert("File not found!");
+    }
+}
+
+// Add event listener to Edit buttons
+/*document.querySelectorAll(".editButton").forEach((button) => {
+    button.addEventListener("click", function() {
+        const fileName = this.dataset.filename; // Get file name from dataset
+        openFileInEditor(fileName);
+    });
+});
+*/
+function createEditButton(fileName) {
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    
+    editButton.onclick = function () {
+        // Check if file exists in localStorage
+        const savedFiles = JSON.parse(localStorage.getItem("savedFiles")) || {};
+        const fileContent = savedFiles[fileName];
+
+        if (fileContent) {
+            // Store file data in sessionStorage
+            sessionStorage.setItem("currentFileName", fileName);
+            sessionStorage.setItem("currentFileContent", fileContent);
+
+            // Redirect to editor page with file name in URL
+            window.location.href = `editor.html?file=${encodeURIComponent(fileName)}`;
+        } else {
+            alert("File not found!");
+        }
+    };
+
+    return editButton;
+}
+
+
+// Save Content to LocalStorage on Editor Page
+function saveFile(content) {
+    let fileName = localStorage.getItem("currentFile") || prompt("Enter file name:");
+    if (!fileName) return;
+
+    let savedFiles = JSON.parse(localStorage.getItem("savedFiles")) || {};
+    savedFiles[fileName] = content;
+    localStorage.setItem("savedFiles", JSON.stringify(savedFiles));
+
+    let recents = JSON.parse(localStorage.getItem("recents")) || [];
+    if (!recents.includes(fileName)) recents.push(fileName);
+    localStorage.setItem("recents", JSON.stringify(recents));
+
+    alert("File saved successfully!");
+    window.location.href = "index.html"; // Redirect to home
+}
+
+// Share File
+function shareFile(fileName) {
+    const shareOption = prompt("Where would you like to share? (Email, Social Media, etc.)");
+    if (shareOption) {
+        alert(`File will be shared via ${shareOption}`);
+    } else {
+        alert("No sharing option selected.");
+    }
+}
+
+// Rename File
+function renameFile(oldFileName) {
+    const newFileName = prompt("Enter a new file name:", oldFileName);
+    if (!newFileName || newFileName === oldFileName) return;
+
+    let savedFiles = JSON.parse(localStorage.getItem("savedFiles")) || {};
+    if (!savedFiles[oldFileName]) {
+        alert("File not found!");
+        return;
+    }
+
+    savedFiles[newFileName] = savedFiles[oldFileName];
+    delete savedFiles[oldFileName];
+    localStorage.setItem("savedFiles", JSON.stringify(savedFiles));
+
+    let recents = JSON.parse(localStorage.getItem("recents")) || [];
+    const index = recents.indexOf(oldFileName);
+    if (index > -1) {
+        recents[index] = newFileName;
+        localStorage.setItem("recents", JSON.stringify(recents));
+    }
+
+    alert("File renamed successfully!");
+    loadRecents();
+}
+
+// Delete File
+function removeFile(fileName) {
+    let savedFiles = JSON.parse(localStorage.getItem("savedFiles")) || {};
+    let recents = JSON.parse(localStorage.getItem("recents")) || [];
+
+    delete savedFiles[fileName];
+    recents = recents.filter(name => name !== fileName);
+
+    localStorage.setItem("savedFiles", JSON.stringify(savedFiles));
+    localStorage.setItem("recents", JSON.stringify(recents));
+
+    alert("File deleted successfully!");
+    loadRecents();
+}
+
+window.onload = loadRecents;
+function createNewFile() {
+        localStorage.removeItem("currentFile");  // Remove previous file name
+        localStorage.removeItem("currentContent");  // Remove previous content
+        window.location.href = "editor.html";  // Redirect to editor
+    }
+
+
+    
+    </script>
+    <script src="script.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

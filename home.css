@@ -1,0 +1,133 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.home-container {
+    background: transparent;
+    padding: 40px;
+    border-radius: 10px;
+    animation: fadeIn 1s ease-in-out;
+    width: 90%;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    animation: slideIn 1s ease-in-out;
+}
+
+p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+button {
+    background: #ff5722;
+    border: none;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+    animation: slideIn 1s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 87, 34, 0.5);
+}
+
+button img {
+    width: 20px;
+}
+
+.recents-container {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.recents-list {
+    list-style: none;
+    margin-top: 10px;
+    padding: 0;
+}
+
+.recents-list li {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+.recents-list li:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.icons {
+    display: flex;
+    gap: 10px;
+}
+
+.icons button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+.icons button img {
+    width: 20px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .home-container {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 1.5em;
+    }
+    p {
+        font-size: 1em;
+    }
+    button {
+        font-size: 0.9em;
+        padding: 10px 15px;
+    }
+}

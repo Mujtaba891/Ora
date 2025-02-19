@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ora File Viewer</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        #file-content { border: 1px solid #ccc; padding: 10px; margin-top: 20px; white-space: pre-wrap; }
+        button { margin-top: 10px; padding: 8px 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Ora File Viewer</h2>
+    <div id="file-content">Loading file...</div>
+    <button id="edit-button" style="display:none;">Edit</button>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch(err => console.log('Service Worker Registration Failed', err));
+        }
+
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        window.onload = function () {
+            const fileParam = getQueryParam("file");
+            if (!fileParam) {
+                document.getElementById("file-content").textContent = "No file selected.";
+                return;
+            }
+
+            fetch(fileParam)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("file-content").textContent = data.text;
+                    const editButton = document.getElementById("edit-button");
+                    editButton.style.display = "inline-block";
+                    editButton.onclick = function () {
+                        sessionStorage.setItem("currentFileName", data.name);
+                        sessionStorage.setItem("currentFileContent", data.text);
+                        window.location.href = "editor.html";
+                    };
+                })
+                .catch(() => {
+                    document.getElementById("file-content").textContent = "Failed to load file.";
+                });
+        };
+    </script>
+</body>
+</html>
