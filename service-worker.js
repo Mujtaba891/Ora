@@ -8,7 +8,13 @@ self.addEventListener("install", (event) => {
                 "/editor.html",
                 "/script.js",
                 "/style.css",
-                "/manifest.json"
+                "/manifest.json",
+                "/app.js",
+                "/editor.js",
+                "/home.css",
+                "/home.js",
+                "/app.css"
+
             ]);
         })
     );
