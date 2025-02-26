@@ -89,6 +89,7 @@ input{
   display: flex;
   gap: 12px;
   justify-content: center;
+  margin-right: 20px;
 }
 
 /* Tool Kit */
