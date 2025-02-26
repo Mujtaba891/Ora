@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="file-actions">
           <button class="edit" title="Edit"><i class="fas fa-edit"></i></button>
           <button class="rename" title="Rename"><i class="fas fa-pencil-alt"></i></button>
-          <button class="share" title="Share"><i class="fas fa-share"></i></button>
           <button class="delete" title="Delete"><i class="fas fa-trash"></i></button>
         </div>
       `;
