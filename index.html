@@ -2,47 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ora Home</title>
-  <link rel="stylesheet" href="home.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ora - Home</title>
+  <link rel="stylesheet" href="index.css">
   <link rel="icon" href="/ora.png">
   <link rel="manifest" href="manifest.json">
-  <link rel="manifest" href="AndroidManifest.xml">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
   <!-- Header with Logo -->
-  <header class="header">
+  <header class="home-header">
     <div class="logo">
-      <a href="index.html"><img src="/ora.png" alt="Logo" width="60px"></a>
+      <a href="index.html">
+        <img src="/ora.png" alt="Ora Logo" width="60">
+      </a>
     </div>
+    <h1>Ora File App</h1>
   </header>
-
+  
   <!-- Main container -->
-  <main class="container">
+  <main class="home-container">
     <!-- Create File Section -->
-    <section class="create-file">
-      <button id="createFileBtn">
-        <i class="fas fa-file"></i> Create New File
+    <section class="create-file-section">
+      <button id="createFileBtn" class="create-file-btn">
+        <i class="fas fa-file"></i>
+        <span>Create New File</span>
       </button>
     </section>
-
-    <!-- Recents Section -->
-    <section class="recents">
-      <h2>Recents</h2>
-      <div id="recentsContainer">
-        <!-- Saved file entries will be added here dynamically -->
+    
+    <!-- Recent Files Section -->
+    <section class="recents-section">
+      <h2>Recent Files</h2>
+      <div id="recentsList">
+        <!-- Recent file items will be loaded here dynamically -->
       </div>
     </section>
   </main>
 
-  <script src="home.js"></script>
-  <script src="script.js"></script>
+  <!-- Script to handle recents list and file actions -->
   <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js')
-            .then(() => console.log("Service Worker Registered"));
+    // Redirect to editor page for creating a new file.
+    document.getElementById('createFileBtn').addEventListener('click', function() {
+      // Clear any existing current file (if you want to start a new file)
+      localStorage.removeItem('currentFile');
+      window.location.href = 'editor.html';
+    });
+
+    // Load recent files from localStorage and display them
+    function loadRecents() {
+      let recents = JSON.parse(localStorage.getItem('recents')) || [];
+      // Sort recents so that the most recent file is shown first
+      recents.sort((a, b) => b.timestamp - a.timestamp);
+      const recentsList = document.getElementById('recentsList');
+      recentsList.innerHTML = '';
+
+      if (recents.length === 0) {
+        recentsList.innerHTML = '<p>No recent files found.</p>';
+        return;
+      }
+
+      recents.forEach(file => {
+        // Convert timestamp to readable date and time
+        const dateObj = new Date(file.timestamp);
+        const formattedDate = dateObj.toLocaleDateString();
+        const formattedTime = dateObj.toLocaleTimeString();
+
+        // Create a container for each file
+        const fileDiv = document.createElement('div');
+        fileDiv.classList.add('recent-file');
+
+        fileDiv.innerHTML = `
+          <div class="file-info">
+            <h3>${file.name}</h3>
+            <p>${formattedDate} ${formattedTime}</p>
+          </div>
+          <div class="file-actions">
+            <button class="edit-btn" title="Edit File" onclick="editFile('${file.name}')">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="rename-btn" title="Rename File" onclick="renameFile('${file.name}')">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button class="share-btn" title="Share File" onclick="shareFile('${file.name}')">
+              <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="delete-btn" title="Delete File" onclick="deleteFile('${file.name}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+        recentsList.appendChild(fileDiv);
+      });
     }
-</script>
+
+    // Edit file: sets the file as current and redirects to the editor.
+    function editFile(fileName) {
+      localStorage.setItem('currentFile', fileName);
+      window.location.href = 'editor.html';
+    }
+
+    // Rename file: prompts user for a new name, updates localStorage, and refreshes recents.
+    function renameFile(oldName) {
+      const newName = prompt("Enter new file name:", oldName);
+      if (newName && newName !== oldName) {
+        const content = localStorage.getItem(oldName);
+        if (content !== null) {
+          localStorage.removeItem(oldName);
+          let finalName = newName;
+          if (!finalName.endsWith(".Ora")) {
+            finalName += ".Ora";
+          }
+          localStorage.setItem(finalName, content);
+          
+          // Update the recents list with the new name
+          let recents = JSON.parse(localStorage.getItem('recents')) || [];
+          recents = recents.map(file => {
+            if (file.name === oldName) {
+              file.name = finalName;
+            }
+            return file;
+          });
+          localStorage.setItem('recents', JSON.stringify(recents));
+          loadRecents();
+        }
+      }
+    }
+
+    // Share file: placeholder function for file sharing.
+    function shareFile(fileName) {
+      alert("Share functionality for " + fileName + " is not implemented.");
+    }
+
+    // Delete file: removes file from localStorage and updates recents.
+    function deleteFile(fileName) {
+      if (confirm("Are you sure you want to delete " + fileName + "?")) {
+        localStorage.removeItem(fileName);
+        let recents = JSON.parse(localStorage.getItem('recents')) || [];
+        recents = recents.filter(file => file.name !== fileName);
+        localStorage.setItem('recents', JSON.stringify(recents));
+        loadRecents();
+      }
+    }
+
+    // Load recents list once the page has fully loaded
+    document.addEventListener('DOMContentLoaded', loadRecents);
+  </script>
 </body>
 </html>

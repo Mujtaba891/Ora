@@ -19,7 +19,7 @@
     {
       "action": "/viewer.html",
       "accept": {
-        "application/x-ora": [".Ora"]
+        "application/x-ora": [".ora"]
       }
     }
   ]

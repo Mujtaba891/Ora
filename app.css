@@ -3,11 +3,11 @@
   --primary-color: #222;
   --secondary-color: #f8f9fa;
   --accent-color: #ff6b6b;
-  --accent-hover: #ff0ace;
+ --accent-hover: #ff0ace;
   --white: #ffffff;
   --border-radius: 12px;
   --transition: all 0.3s ease-in-out;
-  --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+   --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
  *{
   padding: 0;
@@ -80,6 +80,7 @@ input{
   position: fixed;
   top: 0;
   left: 0;
+  right: 20px;
   z-index: 1000;
   box-shadow: var(--shadow);
 }

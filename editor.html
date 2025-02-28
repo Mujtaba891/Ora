@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="app.css">
     <link rel="icon" href="/ora.png">
     <link rel="manifest" href="manifest.json">
-    <link rel="manifest" href="AndroidManifest.xml">
+    <link rel="manifest" href="/AndroidManifest.xml">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -17,8 +17,8 @@
                 <a href="index.html"><img src="/ora.png" alt="Logo" width="60px"></a>
             </div>
             <div class="toolbar">
-                <button id="homeButton"><i class="fas fa-home"></i></button>  
-                <button id="saveButton"><i class="fas fa-save"></i></button>
+                <button id="homeButton"><i class="fas fa-home"></i></button>
+                <button id="saveButton"><i class="fas fa-save"></i></button>           
                 <button onclick="downloadOraFile()"><i class="fas fa-download"></i></button>
                 <button id="openOraFileButton"><i class="fas fa-folder-open"></i></button>
                 <input type="file" id="fileInput" accept=".Ora" style="display: none;">
@@ -142,7 +142,7 @@
     </div>
     <script src="script.js"></script>
     <script src="home.js"></script>
-    <script src="database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
@@ -290,7 +290,7 @@ document.getElementById('homeButton').addEventListener('click', function() {
         document.execCommand(command, false, value);
       }
     }
-
+     
     </script>
 </body>
 </html>

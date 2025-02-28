@@ -219,27 +219,6 @@ function removeMedia(index) {
     loadMedia();
 }
 
-
-// Save or Update Ora File
-/*function saveOraFile() {
-    const content = document.getElementById("editor").innerHTML;
-    let fileName = prompt("Enter project name:", "NewFile");
-
-    if (!fileName) return;
-
-    if (localStorage.getItem(fileName)) {
-        if (!confirm(`"${fileName}" already exists. Do you want to update it?`)) return;
-    }
-
-    const oraData = { name: fileName, text: content };
-    localStorage.setItem(fileName, JSON.stringify(oraData));
-
-    alert("File saved successfully!");
-    
-    // ✅ Save hone ke baad recent files update karo
-    loadRecentFiles();
-}*/
-
 // Rename File
 function renameFile(oldName) {
     let newName = prompt("Enter new file name:", oldName);
@@ -261,15 +240,6 @@ function deleteFile(fileName) {
         loadRecentFiles();
     }
 }
-
-// Share File (Copy to Clipboard)
-function shareFile(fileData) {
-    const fileContent = JSON.stringify(fileData);
-    navigator.clipboard.writeText(fileContent).then(() => {
-        alert("File copied to clipboard! Share it with others.");
-    });
-}
-
 
 function loadRecentFiles() {
     console.log("Recent files loaded.");
